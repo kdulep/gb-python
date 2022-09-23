@@ -4,10 +4,13 @@
 # - 7 -> да
 # - 1 -> нет
 
-a = input("Input week day number:")
+a = int(input("Input week day number:"))
 
 if 1 <= a <= 5:
     print("Not weekend")
 
 elif a == 6 or a == 7:
     print("Weekend")
+
+else:
+    print("Wrong weekday number")
