@@ -18,5 +18,8 @@ data = list(map(int, input().split()))
 
 x = data[0]
 y = data[1]
-
-quarter(x, y)
+if x!=0 and y!=0:
+    quarter(x, y)
+else:
+    print("Wrong coordinates")
+    
