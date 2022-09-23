@@ -12,7 +12,8 @@ def inputNumber(prompt):
     data = list(map(int, input().split()))
     return data
 
+
 A = inputNumber("Enter the number 1 coordinates: X Y delimited by spaces")
 B = inputNumber("Enter the number 2 coordinates: X Y delimited by spaces")
 
-print("Line length:%.2f" %calcLength(A,B))
+print("Line length:%.2f" % calcLength(A, B))
