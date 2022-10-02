@@ -18,6 +18,7 @@ def fibo(n):
         x.reverse()
     return x[0]
 
+
 n = int(input("Введите n: "))
 data = []
 for i in range(-n, n+1):

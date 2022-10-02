@@ -6,9 +6,15 @@ import random
 
 #n= int(input("Введите n: "))
 #data = random.sample(range(-n, n+1), n+1)
+
 data = [2, 3, 5, 9, 3]
 sum = 0
-for idx, i in enumerate(data):
-    if not idx % 2 == 0:
-        sum += i
+
+# for idx, i in enumerate(data):
+#    if idx % 2:
+#        sum += i
+
+for item in data[1::2]:
+    sum += item
+
 print(sum)
