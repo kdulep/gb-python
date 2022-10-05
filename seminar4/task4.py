@@ -9,9 +9,11 @@ from sympy import Symbol, expand
 
 k = randint(2, 5)
 
+
 def get_ratios(k):
     ratios = [randint(0, 100) for i in range(k + 1)]
     return ratios
+
 
 ratios = get_ratios(k)
 
