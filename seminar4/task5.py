@@ -15,14 +15,13 @@ def read_file(file):
 file1 = 'Polynomial1.txt'
 file2 = 'Polynomial2.txt'
 
-poly1 = read_file(file1)
-poly2 = read_file(file2)
-
+poly1 = read_file(file1).replace(' = 0','')
+poly2 = read_file(file2).replace(' = 0','')
 x = Symbol('x')
 my_poly1 = sympy.polys.polytools.poly_from_expr(poly1)[0]
 my_poly2 = sympy.polys.polytools.poly_from_expr(poly2)[0]
 
-polysum=my_poly1+my_poly2
+polysum = my_poly1+my_poly2
 
 with open('Polynomial-sum.txt', 'w') as data:
-    data.write(str(polysum.as_expr()).replace('**', '^'))
+    data.write(str(polysum.as_expr()).replace('**', '^')+' = 0')

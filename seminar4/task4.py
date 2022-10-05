@@ -11,8 +11,6 @@ k = randint(2, 5)
 
 def get_ratios(k):
     ratios = [randint(0, 100) for i in range(k + 1)]
-    while ratios[0] == 0:
-        ratios[0] = randint(1, 100)
     return ratios
 
 ratios = get_ratios(k)
@@ -24,4 +22,4 @@ x = Symbol('x')
 # print(np.poly1d(p))
 
 with open('Polynomial.txt', 'w') as data:
-    data.write(str(expand(p(x))).replace('**', '^'))
+    data.write(str(expand(p(x))).replace('**', '^')+" = 0")
