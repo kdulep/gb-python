@@ -17,7 +17,7 @@ print(data)
 
 newlist = []
 data_count = dict(Counter(data))
-
+print(data_count)
 for d in data:
     if data_count[d] == 1:
         newlist.append(d)

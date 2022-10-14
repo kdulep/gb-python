@@ -17,10 +17,11 @@ def get_ratios(k):
     return ratios
 
 
-ratios = get_ratios(k)
-
+#ratios = get_ratios(k)
+ratios=[4,12,0]
 print(ratios)
 p = np.poly1d(ratios)
+print(p)
 x = Symbol('x')
 
 with open('Polynomial.txt', 'w') as data:
