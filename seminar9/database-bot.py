@@ -1,4 +1,4 @@
-# Создайте программу для игры в ""Крестики-нолики"".
+# Прикрутить бота к задачам с предыдущего семинара
 
 """
 This is a simple example of usage of CallbackData factory
