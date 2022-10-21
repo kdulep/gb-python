@@ -15,7 +15,7 @@ from aiogram.utils.exceptions import MessageNotModified
 
 logging.basicConfig(level=logging.INFO)
 
-API_TOKEN = '5461684431:AAGk7iR-KDplMqQi1d7pblw5eqrZkiorbPc'
+API_TOKEN = 'TOKEN'
 
 EMPTY_BOX = u"\U0001F532"
 CROSS_BOX = u"\u274C"
