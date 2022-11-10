@@ -10,13 +10,13 @@ import speech_recognition as sr
 from gtts import gTTS
 
 import logging
+from pathlib import Path
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types.input_file import InputFile
-from pathlib import Path
+import uuid
 
-
-API_TOKEN = 'TOKEN_INSERT_HERE'
+API_TOKEN = ''
 AUDIO_FILE = 'voice.ogg'
 
 # Configure logging
@@ -26,23 +26,27 @@ logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
+voices= {}
 
-def substring_after(s, delim):
-    return s.partition(delim)[2]
-
+# def substring_after(s, delim):
+#     return s.partition(delim)[2]
 
 @ dp.message_handler(content_types=types.ContentTypes.VOICE)
 async def handle_voice_documents(message: types.Message):
-    print(message.voice.file_id)
-    result = await bot.get_file(message.voice.file_id)
-    await result.download(AUDIO_FILE)
+    #print(message.voice.file_id)
 
+    myvoice=voices.get(message.from_user.id, str(uuid.uuid4()))
+    voices[message.from_user.id]= myvoice
+    result = await bot.get_file(message.voice.file_id)
+    await result.download(myvoice+".ogg")
     r = sr.Recognizer()
-    subprocess.call('del -y voice.wav', shell=True)
-    subprocess.call('ffmpeg -i voice.ogg voice.wav', shell=True)
-    with sr.AudioFile('voice.wav') as source:
+    subprocess.call('del -y '+myvoice+'.wav', shell=True)
+    subprocess.call('ffmpeg -i '+myvoice+'.ogg ' + myvoice+'.wav', shell=True)
+    with sr.AudioFile(myvoice+'.wav') as source:
         audio = r.record(source)  # read the entire audio file
     mytext=""
+    subprocess.call('del -y '+myvoice+'.wav', shell=True)
+    subprocess.call('del -y '+myvoice+'.ogg', shell=True)
     try:
         # for testing purposes, we're just using the default API key
         # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
@@ -84,41 +88,36 @@ async def handle_voice_documents(message: types.Message):
         try:
             ev=eval(text)
             await message.answer(f"Результат: {ev}!")
-            await bot.send_voice(message.chat.id, tovoice("Наш результат: "+str(ev)), caption="Наш ответ")
-            
+            await bot.send_voice(message.chat.id, tovoice("Вы спросили: "+text+".Наш результат: "+str(ev),myvoice), caption="Наш ответ")
+            subprocess.call("del -y _"+ myvoice + '.ogg', shell=True)            
         except (SyntaxError, NameError) as e:
             await message.answer(f"Вы сказали но я не понял!{mytext}")
     else:
         print('Not Found')
         await message.answer(f"Вы сказали но я не понял!{mytext}")
 
-def tovoice(text):
+def tovoice(text,myvoice):
     tts = gTTS(text,lang="ru")
-    tts.save('voice.mp3')
-    subprocess.call('del -y voicex.ogg', shell=True)
-    subprocess.call('ffmpeg -i voice.mp3 -c:a libopus voicex.ogg', shell=True)
-    out_filename="voicex.ogg"
+    tts.save(myvoice+'.mp3')
+    subprocess.call("del -y _"+ myvoice + '.ogg', shell=True)
+    subprocess.call('ffmpeg -i '+ myvoice+'.mp3'+" -c:a libopus _"+ myvoice+".ogg", shell=True)
+    subprocess.call("del -y "+ myvoice + '.mp3', shell=True)
+    out_filename="_"+myvoice+".ogg"
     path = Path("", out_filename)
     voice = InputFile(path)
     return voice
-    
-
+ 
 @dp.message_handler(commands=['start', 'help'])
 async def send_welcome(message: types.Message):
     """
     This handler will be called when user sends `/start` or `/help` command
     """
-    await bot.send_voice(message.chat.id, tovoice("Попробуйте наш голосовой калькулятор"), caption="Наш ответ")
+    myvoice=voices.get(message.from_user.id, str(uuid.uuid4()))
+    voices[message.from_user.id]= myvoice
+    await bot.send_voice(message.chat.id, tovoice("Попробуйте наш голосовой калькулятор",myvoice), caption="Наш ответ")
+    subprocess.call("del -y _"+ myvoice + '.ogg', shell=True)
     await message.reply("Попробуйте наш голосовой калькулятор")
-    
-
-# @dp.message_handler()
-# async def echo(message: types.Message):
-#     # old style:
-#     # await bot.send_message(message.chat.id, message.text)
-
-#     await message.answer(message.text)
-
+ 
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
