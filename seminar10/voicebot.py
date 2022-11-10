@@ -4,7 +4,7 @@ It echoes any incoming text messages.
 """
 import subprocess
 
-#import soundfile as sf
+import re
 import math
 import speech_recognition as sr
 
@@ -12,7 +12,7 @@ import logging
 
 from aiogram import Bot, Dispatcher, executor, types
 
-API_TOKEN = '!!!!!!!!!!!TOKEN_INSERT_HERE!!!!!!!!!!!!!!!!!!!'
+API_TOKEN = 'TOKEN_INSERT_HERE'
 AUDIO_FILE = 'voice.ogg'
 
 # Configure logging
@@ -38,7 +38,7 @@ async def handle_voice_documents(message: types.Message):
     subprocess.call('ffmpeg -i voice.ogg voice.wav', shell=True)
     with sr.AudioFile('voice.wav') as source:
         audio = r.record(source)  # read the entire audio file
-
+    mytext=""
     try:
         # for testing purposes, we're just using the default API key
         # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
@@ -52,18 +52,34 @@ async def handle_voice_documents(message: types.Message):
             "Could not request results from Google Speech Recognition service; {0}".format(e))
 
     # await bot.send_voice(voice=filename)
-    pos = mytext.find("калькулятор")
-    if (pos != -1):
-        text = substring_after(mytext, "калькулятор")
-        text = text.replace("число Пи", str(math.pi))
-        text = text.replace("числа Пи", str(math.pi))
-        text = text.replace("пи", str(math.pi))
-        text = text.replace(" x ", "*")
-        text = text.replace("умножить", "*")
-        text = text.replace("разделить", "/")
+    text=mytext.lower()
+    #pos = mytext.find("калькулятор")
+    #if (pos != -1):
+    #    text = substring_after(mytext, "калькулятор")
+    text = text.replace("число пи", str(math.pi))
+    text = text.replace("числа пи", str(math.pi))
+    text = text.replace("пи", str(math.pi))
+    text = text.replace(" x ", "*")
+    text = text.replace(" х ", "*")
+    #text = re.sub('\s+x\s', '*', text)
+    #text = re.sub('\s+х\s', '*', text)
+    text = text.replace("умножить", "*")
+    text = text.replace("разделить", "/")
+    text = text.replace("в степени", "**")
 
-        await message.answer(f"Калькулятор:{eval(text)}!")
+    #chars = set('0123456789$+*/ ')
+    #if any((c in chars) for c in text):
+    #bad_chars = set(text) - set('0123456789$+*/ ') # set(X,Y)
+    #if not any(c not in '0123456789$+*/ ' for c in text):
+
+    if not re.search('[^0123456789$+*/ ]', text):
+        print('Found expression')
+        try:
+            await message.answer(f"Результат: {eval(text)}!")
+        except (SyntaxError, NameError) as e:
+            await message.answer(f"Вы сказали но я не понял!{mytext}")
     else:
+        print('Not Found')
         await message.answer(f"Вы сказали но я не понял!{mytext}")
 
 
