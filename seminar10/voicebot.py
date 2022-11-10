@@ -1,4 +1,3 @@
-
 """
 This is a echo bot.
 It echoes any incoming text messages.
@@ -13,7 +12,7 @@ import logging
 
 from aiogram import Bot, Dispatcher, executor, types
 
-API_TOKEN = '!!!!!!!!!!!!!!!!!TOKEN_INSERT_HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+API_TOKEN = '!!!!!!!!!!!TOKEN_INSERT_HERE!!!!!!!!!!!!!!!!!!!'
 AUDIO_FILE = 'voice.ogg'
 
 # Configure logging
